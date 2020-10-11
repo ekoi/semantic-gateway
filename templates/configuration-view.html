@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Display and Edit Configuration</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', path='/css/bootstrap.min.css') }}" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-5">Semantic Gateway Configuration</h1>
+        <hr class="my-4">
+
+        {% for ontology in ontologies %}
+        <p>name: <b>{{ ontology.get_name() }}</b><br/>
+            type: {{ ontology.get_type() }}<br/>
+            url : {{ ontology.get_url() }}
+        </p>
+        {% endfor %}
+        <a class="btn btn-primary btn-lg" href="/configuration/edit" role="button">Edit</a>
+    </div>
+
+</div>
+</body>
+</html>
