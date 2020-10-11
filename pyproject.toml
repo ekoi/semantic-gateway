@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "fastapi-html"
+version = "0.1.0"
+description = ""
+authors = ["Eko Indarto<eko.indarto@dans.knaw.nl>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+fastapi = "^0.61.1"
+jinja2 = "^2.11.2"
+uvicorn = "^0.12.1"
+python-multipart = "^0.0.5"
+aiofiles = "^0.5.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry>=1.1.2"]
+build-backend = "poetry.masonry.api"
