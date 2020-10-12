@@ -10,26 +10,27 @@
 </head>
 <body>
 <script>
-function addRow () {
+function addRow() {
+    var nr = (document.getElementsByTagName('input').length)/3 + 1;
   document.querySelector('#content').insertAdjacentHTML(
     'afterbegin',
     `<div class="card-body mb-2 border border-warning">
             <div class="form-group row">
                 <label for="inputName" class="col-sm-1 col-form-label">Name</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" id="inputName" value="" placeholder="Name" required>
+                    <input type="text" class="form-control" name="inputName_` + nr + `" value="" placeholder="Name" required>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="inputType" class="col-sm-1 col-form-label">Type</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" id="inputType" value="" placeholder="Type" required>
+                    <input type="text" class="form-control" name="inputType_` + nr + `" value="" placeholder="Type" required>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="inputUrl" class="col-sm-1 col-form-label">URL</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" id="inputUrl" value="" placeholder="URL" required>
+                    <input type="text" class="form-control" name="inputUrl_` + nr + `" value="" placeholder="URL" required>
                 </div>
             </div>
             <div class="form-group row">
@@ -57,19 +58,19 @@ e.parentNode.parentNode.parentNode.remove();
             <div class="form-group row">
                 <label for="inputName" class="col-sm-1 col-form-label">Name</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" id="inputName" value="{{ ontology.get_name() }}" placeholder="Name" required>
+                    <input type="text" class="form-control" name="inputName_{{ ontology.get_index() }}" value="{{ ontology.get_name() }}" placeholder="Name" required>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="inputType" class="col-sm-1 col-form-label">Type</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" id="inputType" value="{{ ontology.get_type() }}" placeholder="Type" required>
+                    <input type="text" class="form-control" name="inputType_{{ ontology.get_index() }}" value="{{ ontology.get_type() }}" placeholder="Type" required>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="inputUrl" class="col-sm-1 col-form-label">URL</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" id="inputUrl" value="{{ ontology.get_url() }}" placeholder="URL" required>
+                    <input type="text" class="form-control" name="inputUrl_{{ ontology.get_index() }}" value="{{ ontology.get_url() }}" placeholder="URL" required>
                 </div>
             </div>
             <div class="form-group row">
@@ -78,14 +79,19 @@ e.parentNode.parentNode.parentNode.remove();
                 </div>
             </div>
             </div>
-            {% endfor %}
-            <div id="content">
-            </div>
-        <div class="form-group row">
+            {% if loop.last %}
+            <div class="form-group row">
             <div class="col-sm-6">
                 <button type="button" class="btn btn-primary" onclick="addRow()">add</button>
             </div>
-        </div>
+                <div class="col-sm-6 text-right">
+                    <button type="submit" class="btn btn-primary">update</button>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+            <div id="content">
+            </div>
         </form>
     </div>
 

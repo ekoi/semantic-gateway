@@ -1,4 +1,8 @@
 import xml.etree.ElementTree as ET
+
+from pydantic import BaseModel
+
+
 class Vocabularies:
     "This is a Vocabularies class"
     def __init__(self, name):
@@ -6,15 +10,18 @@ class Vocabularies:
 
     def get_ontologies(self):
         ontologies = []
-        for atype in self.root.findall('.//ontology'):
-            ontology = Ontology(atype)
+        for i, atype in enumerate(self.root.findall('.//ontology')):
+            ontology = Ontology(i, atype)
             ontologies.append(ontology)
 
         return ontologies
 
 class Ontology:
-    def __init__(self, element):
+    def __init__(self, i, element):
+        self.i = i
         self.element  = element
+    def get_index(self):
+        return self.i
 
     def get_name(self):
         return self.element.attrib['name']
@@ -30,3 +37,4 @@ class Ontology:
             return base_url +  '/' + uri.text
         else:
             return base_url
+

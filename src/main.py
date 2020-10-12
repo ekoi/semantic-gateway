@@ -30,3 +30,10 @@ def get_configuration_html_view(request: Request):
     vocabularies = Vocabularies('gateway.xml')
     return templates.TemplateResponse('configuration-edit.html', context={'request': request, 'ontologies': vocabularies.get_ontologies()})
 
+@app.post("/configuration/edit")
+async def modify_configuration_post(request: Request):
+    form_data = await request.form()
+    items = form_data.items();
+    for key, value in items:
+        print(key + ':' + value)
+    return form_data
