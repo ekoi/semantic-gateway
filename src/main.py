@@ -2,8 +2,6 @@ from fastapi import FastAPI, Request, Response
 from fastapi.templating import Jinja2Templates
 from starlette.staticfiles import StaticFiles
 
-
-
 from src.model import Vocabularies
 
 app = FastAPI()

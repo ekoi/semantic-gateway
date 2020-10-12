@@ -34,15 +34,15 @@ function addRow () {
             </div>
             <div class="form-group row">
                 <div class="col-sm-6">
-                <button type="button" class="btn btn-danger">remove</button>
+                <button type="button" class="btn btn-danger" onclick="removeRow(this);">remove</button>
                 </div>
             </div>
             </div>`
   )
 }
 
-function removeRow (input) {
-  input.parentNode.remove()
+function removeRow (e) {
+e.parentNode.parentNode.parentNode.remove();
 }
 </script>
 
@@ -74,19 +74,18 @@ function removeRow (input) {
             </div>
             <div class="form-group row">
                 <div class="col-sm-6">
-                <button type="button" class="btn btn-danger">remove</button>
+                <button type="button" class="btn btn-danger" onclick="removeRow(this);">remove</button>
                 </div>
             </div>
             </div>
             {% endfor %}
-            <div class="form-group row">
-                <div class="col-sm-6">
-                    <button type="button" class="btn btn-primary" onclick="addRow()">add</button>
-                </div>
-            </div>
-
             <div id="content">
             </div>
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <button type="button" class="btn btn-primary" onclick="addRow()">add</button>
+            </div>
+        </div>
         </form>
     </div>
 
