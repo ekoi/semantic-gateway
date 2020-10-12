@@ -1,8 +1,9 @@
 from fastapi import FastAPI, Request, Response
 from fastapi.templating import Jinja2Templates
+from starlette.responses import FileResponse
 from starlette.staticfiles import StaticFiles
 
-from src.model import Vocabularies
+from src.model import Vocabularies, WriteXML
 
 app = FastAPI()
 templates = Jinja2Templates(directory='templates/')
@@ -33,7 +34,15 @@ def get_configuration_html_view(request: Request):
 @app.post("/configuration/edit")
 async def modify_configuration_post(request: Request):
     form_data = await request.form()
-    items = form_data.items();
-    for key, value in items:
-        print(key + ':' + value)
-    return form_data
+    writeXML = WriteXML(form_data.items());
+    writeXML.save()
+    try:
+        content = open('./data/gateway-conf.xml', 'r')
+        return Response(content=content.read(), media_type="application/xml")
+    except:
+        return "NOT FOUND"
+    # return form_data
+
+@app.get('/configuration/download')
+def download():
+    return FileResponse('./data/gateway-conf.xml', media_type='application/octet-stream', filename='gateway-conf.xml')

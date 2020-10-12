@@ -29,12 +29,82 @@ class Ontology:
     def get_type(self):
         return self.element.find('type').text
 
-    def get_url(self):
-        base_url = self.element.find('api').text
-        uri =  self.element.find('parameters/uri')
-        if uri is not None:
-            print(uri.text)
-            return base_url +  '/' + uri.text
-        else:
-            return base_url
+    def get_vocabulary(self):
+        v = self.element.find('vocabulary')
+        if v is not None:
+            return self.element.find('vocabulary').text
+        return ''
 
+    def get_base_url(self):
+        return self.element.find('api').text
+
+    def get_uri(self):
+        u = self.element.find('parameters/uri')
+        if u is not None:
+            return u.text
+        return ''
+
+    def get_vocab(self):
+        u = self.element.find('parameters/vocab')
+        if u is not None:
+            return u.text
+        return ''
+
+    def get_query(self):
+        u = self.element.find('parameters/query')
+        if u is not None:
+            return u.text
+        return ''
+
+    def get_lang(self):
+        u = self.element.find('parameters/lang')
+        if u is not None:
+            return u.text
+        return ''
+
+
+class WriteXML:
+    data = ET.Element('vocabularies');
+    def __init__(self, el):
+        for key, value in el:
+            if str(value).strip() != '':
+
+                if str(key).startswith('inputName_'):
+                    ontology = ET.SubElement(self.data, 'ontology')
+                    ontology.set('name',str(value))
+                if str(key).startswith('inputType_'):
+                    type = ET.SubElement(ontology, 'type')
+                    type.text = str(value)
+                if str(key).startswith('inputVocabulary_'):
+                    voc = ET.SubElement(ontology, 'vocabulary')
+                    voc.text = str(value)
+                if str(key).startswith('inputBaseUrl_'):
+                    api = ET.SubElement(ontology, 'api')
+                    api.text = str(value)
+                    parameters = ET.SubElement(ontology, 'parameters')
+
+                if str(key).startswith('inputUri_'):
+                    uri = ET.SubElement(parameters, 'uri')
+                    uri.text = str(value)
+
+                if str(key).startswith('inputVocab_'):
+                    vocab = ET.SubElement(parameters, 'vocab')
+                    vocab.text = str(value)
+
+                if str(key).startswith('inputQuery_'):
+                    query = ET.SubElement(parameters, 'query')
+                    query.text = str(value)
+
+                if str(key).startswith('inputLang_'):
+                    lang = ET.SubElement(parameters, 'lang')
+                    lang.text = str(value)
+
+
+        # create a new XML file with the results
+    def save(self):
+        mydata = ET.tostring(self.data, encoding='UTF8', method='xml')
+        myfile = open("./data/gateway-conf.xml", "wb")
+        myfile.seek(0)
+        myfile.truncate()
+        myfile.write(mydata)
+        print(mydata)

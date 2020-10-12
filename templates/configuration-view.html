@@ -17,7 +17,9 @@
         {% for ontology in ontologies %}
         <p>name: <b>{{ ontology.get_name() }}</b><br/>
             type: {{ ontology.get_type() }}<br/>
-            url : {{ ontology.get_url() }}
+            vocabulary : {{ ontology.get_vocabulary() }}<br/>
+            base url : {{ ontology.get_base_url() }}<br/>
+            uri  : {{ ontology.get_uri() }}<br/>
         </p>
         {% endfor %}
         <a class="btn btn-primary btn-lg" href="/configuration/edit" role="button">Edit</a>
