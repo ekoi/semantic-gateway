@@ -5,8 +5,8 @@ from pydantic import BaseModel
 
 class Vocabularies:
     "This is a Vocabularies class"
-    def __init__(self, name):
-        self.root = ET.parse('./data/' + name).getroot()
+    def __init__(self, path):
+        self.root = ET.parse(path).getroot()
 
     def get_ontologies(self):
         ontologies = []
@@ -101,9 +101,9 @@ class WriteXML:
 
 
         # create a new XML file with the results
-    def save(self):
+    def save(self, path):
         mydata = ET.tostring(self.data, encoding='UTF8', method='xml')
-        myfile = open("./data/gateway-conf.xml", "wb")
+        myfile = open(path, 'wb')
         myfile.seek(0)
         myfile.truncate()
         myfile.write(mydata)

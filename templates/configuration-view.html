@@ -15,14 +15,47 @@
         <hr class="my-4">
 
         {% for ontology in ontologies %}
-        <p>name: <b>{{ ontology.get_name() }}</b><br/>
-            type: {{ ontology.get_type() }}<br/>
-            vocabulary : {{ ontology.get_vocabulary() }}<br/>
-            base url : {{ ontology.get_base_url() }}<br/>
-            uri  : {{ ontology.get_uri() }}<br/>
+        <div class="card-body mb-2 border border-primary">
+            <div class="row">
+                <div class="col-sm-2">Name</div>
+                <div class="col-sm-3">{{ ontology.get_name() }}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">Type</div>
+                <div class="col-sm-3">{{ ontology.get_type() }}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">Vocabulary</div>
+                <div class="col-sm-3">{{ ontology.get_vocabulary() }}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">URL</div>
+                <div class="col-sm-3">{{ ontology.get_base_url() }}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">URI</div>
+                <div class="col-sm-3">{{ ontology.get_uri() }}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">Vocab</div>
+                <div class="col-sm-3">{{ ontology.get_vocab() }}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">Query</div>
+                <div class="col-sm-3">{{ ontology.get_query() }}</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">Language</div>
+                <div class="col-sm-3">{{ ontology.get_lang() }}</div>
+            </div>
         </p>
+        </div>
         {% endfor %}
-        <a class="btn btn-primary btn-lg" href="/configuration/edit" role="button">Edit</a>
+        <div class="row">
+            <div class="col-sm-6"><a class="btn btn-primary btn-lg" href="/configuration/edit" role="button">Edit</a></div>
+            <div class="col-sm-6 text-right"><a class="btn btn-warning btn-lg" href="/configuration/download" role="button">download</a></div>
+        </div>
+
     </div>
 
 </div>
