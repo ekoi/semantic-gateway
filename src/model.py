@@ -64,13 +64,15 @@ class Ontology:
 
 
 class WriteXML:
-    data = ET.Element('vocabularies');
+    root = ET.Element('vocabularies');
     def __init__(self, el):
+        #Remove all vocabularies children
+        for child in self.root.findall('.//ontology'):
+            self.root.remove(child)
         for key, value in el:
             if str(value).strip() != '':
-
                 if str(key).startswith('inputName_'):
-                    ontology = ET.SubElement(self.data, 'ontology')
+                    ontology = ET.SubElement(self.root, 'ontology')
                     ontology.set('name',str(value))
                 if str(key).startswith('inputType_'):
                     type = ET.SubElement(ontology, 'type')
@@ -99,12 +101,12 @@ class WriteXML:
                     lang = ET.SubElement(parameters, 'lang')
                     lang.text = str(value)
 
-
         # create a new XML file with the results
     def save(self, path):
-        mydata = ET.tostring(self.data, encoding='UTF8', method='xml')
+        mydata = ET.tostring(self.root, encoding='UTF8', method='xml')
         myfile = open(path, 'wb')
         myfile.seek(0)
         myfile.truncate()
+        myfile.seek(0)
         myfile.write(mydata)
-        print(mydata)
+        myfile.close()
