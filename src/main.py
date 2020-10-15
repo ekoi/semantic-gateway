@@ -54,7 +54,7 @@ def get_fields_composer(request: Request):
     r = http.request('GET', "https://raw.githubusercontent.com/ekoi/speeltuin/master/resources/CMM_Custom_MetadataBlock.tsv")
     d = r.data.decode('utf-8')
     s = io.StringIO(d)
-    template='{"aci":"ACI","source-name":"CVM_SERVER_NAME", "source-url":"CVM_SERVER_URL","vocabs":["VOC"],"keys": ["KV","KT","KU"]}';
+    template='{"vocab-name":"AKMI_KEY", "cvm-url":"CVM_SERVER_URL", "language":"LANGUAGE", "vocabs":["VOC"],"vocab-codes": ["KV","KT","KU"]}';
     json_process = ''
     json_element = ''
     json_text = ''
@@ -63,9 +63,7 @@ def get_fields_composer(request: Request):
     for line in s:
         abc = line.split('\t')
         if json_process == '' and abc[1].endswith('-cv'):
-            json_element = template.replace('CVM_SERVER_NAME', 'CVM_SERVER_NAME-' + abc[1])
-            json_element = json_element.replace('CVM_SERVER_URL', 'CVM_SERVER_URL-' + abc[1])
-            json_element = json_element.replace('ACI',abc[1])
+            json_element = template.replace('AKMI_KEY',abc[1])
             json_element = json_element.replace('VOC', abc[2])
             json_process='create'
         elif json_process  == 'create':
@@ -86,4 +84,5 @@ def get_fields_composer(request: Request):
             json_process = ''
 
         vocabularies = Vocabularies(conf_file_path)
+        # print(dv_setting_json)
     return templates.TemplateResponse('dv-cvm-setting-generator.html', context={'request': request, 'dv_setting_json' : dv_setting_json, 'ontologies': vocabularies.get_ontologies()})
