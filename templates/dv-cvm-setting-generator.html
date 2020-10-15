@@ -10,27 +10,7 @@
 </head>
 <body>
 <script>
-    function addRow(x) {
-    console.log(x);
-    y="#content_" + x;
-    console.log(y);
-    var nr = (document.getElementsByTagName('input').length)/3 + 1;
-  document.querySelector(y).insertAdjacentHTML(
-    'afterbegin',
-    `<div class="row"><div class="col-sm-3 text-right"><button type="button" class="btn btn-warning" onclick="removeRow(this);">-</button>
-                </div>
-                <div class="col-sm-3"> <select class="form-control">
-                    <option value="" disabled selected>Choose your ontology</option>
-                    {% for ontology in ontologies %}
-                    <option value="{{ ontology.get_name() }}">{{ ontology.get_name() }}</option>
-                    {% endfor %}
-                </select></div><div class="col-sm-3">
-                </div></div>`
-  )
-}
-function removeRow (e) {
-e.parentNode.parentNode.remove();
-}
+
 </script>
 <div class="container">
     <div class="jumbotron">
@@ -41,24 +21,16 @@ e.parentNode.parentNode.remove();
             {% for dv_setting_el in dv_setting_json %}
             <div class="row">
                 <div class="col-sm-3">
-                    <label class="d-block">
-                        <input type="checkbox" class="mr-1" name="sports"> {{ dv_setting_el['vocabs'][0] }}
+                    <label class="d-block">{{ dv_setting_el['vocabs'][0] }}
                     </label>
                 </div>
                 <div class="col-sm-3">
-                <select class="form-control">
-                    <option value="" disabled selected>Choose your ontology</option>
                     {% for ontology in ontologies %}
-                    <option value="{{ ontology.get_name() }}">{{ ontology.get_name() }}</option>
+                    <label class="d-block">
+                        <input type="checkbox" class="mr-1" name="sports">{{ ontology.get_name() }}
+                    </label>
                     {% endfor %}
-                </select>
                 </div>
-                <div class="col-sm-3">
-                    <button type="button" class="btn btn-primary" onclick="addRow('{{ dv_setting_el['vocab-name']}}')">+</button>
-                </div>
-            </div>
-            <div id="content_{{ dv_setting_el['vocab-name']}}">
-
             </div>
             <hr class="my-4">
             {% endfor %}
