@@ -44,6 +44,9 @@ class Ontology:
             return u.text
         return ''
 
+    def get_url(self):
+        return self.get_base_url() + '/' + self.get_uri()
+
     def get_vocab(self):
         u = self.element.find('parameters/vocab')
         if u is not None:

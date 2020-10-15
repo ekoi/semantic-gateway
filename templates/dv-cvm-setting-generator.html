@@ -20,16 +20,27 @@
         <div class="form-group">
             {% for dv_setting_el in dv_setting_json %}
             <div class="row">
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <label class="d-block">{{ dv_setting_el['vocabs'][0] }}
                     </label>
                 </div>
-                <div class="col-sm-3">
-                    {% for ontology in ontologies %}
-                    <label class="d-block">
-                        <input type="checkbox" class="mr-1" name="sports">{{ ontology.get_name() }}
-                    </label>
-                    {% endfor %}
+                <div class="col-sm-9">
+                    <table class="table table-bordered">
+                        <tbody>
+                        {% for ontology in ontologies %}
+                            {% if ontology.get_index()%5 == 0 and ontology.get_index() > 0 %}
+                            <tr> {% endif%}
+                            <td>
+                                <input type="checkbox" class="mr-1" name="sports"><a target="_blank" href="{{ ontology.get_base_url() }}">{{ ontology.get_name() }}</a>
+                            </td>
+                        {% if (ontology.get_index()+1) %5 == 0 %}
+                            </tr> {% endif %}
+                        {% endfor %}
+                        </tr>
+
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
             <hr class="my-4">
