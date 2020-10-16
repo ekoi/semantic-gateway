@@ -54,7 +54,7 @@ def get_fields_composer(request: Request):
     r = http.request('GET', "https://raw.githubusercontent.com/ekoi/speeltuin/master/resources/CMM_Custom_MetadataBlock.tsv")
     d = r.data.decode('utf-8')
     s = io.StringIO(d)
-    template='{"vocab-name":"AKMI_KEY", "cvm-url":"CVM_SERVER_URL", "language":"LANGUAGE", "vocabs":["VOC"],"vocab-codes": ["KV","KT","KU"]}';
+    template='{"vocab-name":"AKMI_KEY", "cvm-url":"' + str(request.base_url) +'", "language":"LANGUAGE", "vocabs":["VOC"],"vocab-codes": ["KV","KT","KU"]}';
     json_process = ''
     json_element = ''
     json_text = ''
@@ -75,6 +75,7 @@ def get_fields_composer(request: Request):
                 json_element = json_element.replace('KU', abc[1])
                 json_process="finish";
                 dv_setting_el = json.loads(json_element)
+                print(dv_setting_el)
                 dv_setting_json.append(dv_setting_el)
 
             else:
@@ -86,3 +87,8 @@ def get_fields_composer(request: Request):
         vocabularies = Vocabularies(conf_file_path)
         # print(dv_setting_json)
     return templates.TemplateResponse('dv-cvm-setting-generator.html', context={'request': request, 'dv_setting_json' : dv_setting_json, 'ontologies': vocabularies.get_ontologies()})
+
+@app.post("/dv/setting/edit")
+async def generate_dv_setting_post(request: Request):
+    form_data = await request.form()
+    return form_data

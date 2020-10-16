@@ -31,7 +31,7 @@
                             {% if ontology.get_index()%5 == 0 and ontology.get_index() > 0 %}
                             <tr> {% endif%}
                             <td>
-                                <input type="checkbox" class="mr-1" name="sports"><a target="_blank" href="{{ ontology.get_base_url() }}">{{ ontology.get_name() }}</a>
+                                <input type="checkbox" class="mr-1" name="{{ dv_setting_el['vocab-name'] }}_{{ ontology.get_name() }}"><a target="_blank" href="{{ ontology.get_base_url() }}">{{ ontology.get_name() }}</a>
                             </td>
                         {% if (ontology.get_index()+1) %5 == 0 %}
                             </tr> {% endif %}
@@ -46,9 +46,20 @@
             <hr class="my-4">
             {% endfor %}
         </div>
+            <div class="form-inline d-flex flex-nowrap">
+                <div class="form-group w-25">
+                        <a class="btn btn-warning" href="" role="button">download</a>
+                </div>
+                <div class="md-form form-group">
+                    <label for="dv_url">Dataverse URL</label>
+                    <input type="text" class="form-control" name="dv_url" value="" placeholder="Dataverse URL" required>
+                    <label class="mr-2 ml-4" for="dv_api_token">API Token</label>
+                    <input type="text" class="form-control" name="dv_api_token" value="" placeholder="API Token" required>
+                    <button type="submit" class="btn btn-primary">push</button>
+                </div>
+
+            </div>
         </form>
-        <div class="col-sm-6 text-left"><a class="btn btn-warning btn-lg" href="" role="button">download</a></div>
-    </div>
 </div>
 </body>
 </html>
