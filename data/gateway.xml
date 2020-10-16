@@ -3,9 +3,6 @@
     <ontology name="cessda">
         <type>cvm</type>
         <api>https://cvm-cessda.dataverse.tk</api>
-        <language>
-            <lang code="nl">Nederlands</lang>
-        </language>
         <parameters>
             <vocab>$vocab</vocab>
             <query>$term</query>
@@ -16,10 +13,6 @@
         <type>skosmos</type>
         <vocabulary>thesaurus</vocabulary>
         <api>https://vocabulaires.irstea.fr</api>
-        <language>
-            <lang code="fr">France</lang>
-            <lang code="en">English</lang>
-        </language>
         <parameters>
             <uri>skosmos/rest/v1/search</uri>
             <vocab>$vocab</vocab>
@@ -27,15 +20,10 @@
             <lang>$lang</lang>
         </parameters>
     </ontology>
-    <ontology name="unesco"> 
+    <ontology name="unesco">
         <type>skosmos</type>
         <vocabulary>unesco</vocabulary>
         <api>https://skosmos.labs.coronawhy.org</api>
-        <language>
-            <lang code="am">Amharic</lang>
-            <lang code="en">English</lang>
-            <lang code="sw">Swahili</lang>
-        </language>
         <parameters>
             <uri>skosmos/rest/v1/search</uri>
             <vocab>unesco</vocab>
@@ -47,10 +35,6 @@
         <type>skosmos</type>
         <vocabulary>grid</vocabulary>
         <api>https://skosmos.labs.coronawhy.org</api>
-        <language>
-            <lang code="en">English</lang>
-            <lang code="fr">France</lang>
-        </language>
         <parameters>
             <uri>skosmos/rest/v1/search</uri>
             <vocab>grid</vocab>
@@ -62,9 +46,6 @@
         <type>skosmos</type>
         <vocabulary>mesh</vocabulary>
         <api>http://api.finto.fi</api>
-        <language>
-            <lang code="en">English</lang>
-        </language>
         <parameters>
             <uri>rest/v1/search</uri>
             <vocab>mesh</vocab>
@@ -76,9 +57,6 @@
         <type>skosmos</type>
         <vocabulary>iptc</vocabulary>
         <api>http://api.finto.fi</api>
-        <language>
-            <lang code="fr">France</lang>
-        </language>
         <parameters>
             <uri>rest/v1/search</uri>
             <vocab>iptc</vocab>
@@ -90,9 +68,6 @@
         <type>skosmos</type>
         <vocabulary>agrovoc</vocabulary>
         <api>http://agrovoc.uniroma2.it</api>
-        <language>
-            <lang code="en">English</lang>
-        </language>
         <parameters>
             <uri>agrovoc/rest/v1/search/</uri>
             <query>$term</query>
@@ -103,9 +78,6 @@
         <type>skosmos</type>
         <vocabulary>faechersystematik</vocabulary>
         <api>https://labs.tib.eu</api>
-        <language>
-            <lang code="en">English</lang>
-        </language>
         <parameters>
             <uri>skosmos/rest/v1/search</uri>
             <query>$term</query>
