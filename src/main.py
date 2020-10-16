@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 from starlette.responses import FileResponse, RedirectResponse, StreamingResponse
 from starlette.staticfiles import StaticFiles
 
-from src.model import Vocabularies, WriteXML, ReadTsvFromUrl
+from src.model import Vocabularies, WriteXML, ReadTsvFromUrl, CreateDVSettingJson
 
 app = FastAPI()
 templates = Jinja2Templates(directory='templates/')
@@ -66,25 +66,7 @@ async def push_dv_setting_post(request: Request):
 async def download_dv_setting_post(request: Request):
     readTsvFromUrl = ReadTsvFromUrl(request, http)
     dv_setting_json = readTsvFromUrl.get_dv_setting_json()
-
-    # for dv in dv_setting_json:
-    #     print(dv['vocab-name'])
-
     form_data = await request.form()
-    form_inputs = form_data.items()
-    print(dv_setting_json)
-    for dv in dv_setting_json:
-        dv['vocabs']=[]
-    dv_json=[]
-    for key, value in form_inputs:
-        if key not in ['dv_url','dv_api_token']:
-            for dv in dv_setting_json:
-                if str(key).startswith(dv['vocab-name']):
-                    dv['vocabs'].append(str(key).split('|')[1])
-                    dv_json.append(dv)
-
-    with open('dv-setting.json', 'w') as json_file:
-        json.dump(dv_json, json_file)
-
-    del dv_setting_json
+    createDVSettingJson = CreateDVSettingJson(form_data, dv_setting_json)
+    createDVSettingJson.save_dv_json()
     return FileResponse('dv-setting.json', media_type='application/octet-stream', filename='dv-setting.json')
