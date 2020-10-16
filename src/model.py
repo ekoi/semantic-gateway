@@ -1,7 +1,5 @@
 import xml.etree.ElementTree as ET
-
-from pydantic import BaseModel
-
+import io, urllib3, json
 
 class Vocabularies:
     "This is a Vocabularies class"
@@ -117,3 +115,42 @@ class WriteXML:
         myfile.seek(0)
         myfile.write(mydata)
         myfile.close()
+
+class ReadTsvFromUrl:
+    dv_setting_json = []
+    def __init__(self,request, http):
+        self.dv_setting_json = []
+        r = http.request('GET', "https://raw.githubusercontent.com/ekoi/speeltuin/master/resources/CMM_Custom_MetadataBlock.tsv")
+        d = r.data.decode('utf-8')
+        s = io.StringIO(d)
+        template='{"vocab-name":"AKMI_KEY", "cvm-url":"' + str(request.base_url) +'", "language":"LANGUAGE", "vocabs":["VOC"],"vocab-codes": ["KV","KT","KU"]}';
+        json_process = ''
+        json_element = ''
+        json_text = ''
+        dv_setting_el = {}
+        for line in s:
+            abc = line.split('\t')
+            if json_process == '' and abc[1].endswith('-cv'):
+                json_element = template.replace('AKMI_KEY',abc[1])
+                json_element = json_element.replace('VOC', abc[2])
+                json_process='create'
+            elif json_process  == 'create':
+                if abc[1].endswith('-vocabulary'):
+                    json_element = json_element.replace('KV', abc[1])
+                elif abc[1].endswith('-term'):
+                    json_element = json_element.replace('KT', abc[1])
+                elif abc[1].endswith('-url'):
+                    json_element = json_element.replace('KU', abc[1])
+                    json_process="finish";
+                    dv_setting_el = json.loads(json_element)
+                    # print(dv_setting_el)
+                    self.dv_setting_json.append(dv_setting_el)
+
+                else:
+                    print('error')
+
+            if json_process == 'finish':
+                json_process = ''
+
+    def get_dv_setting_json(self):
+        return self.dv_setting_json
