@@ -27,12 +27,18 @@
                     <table class="table table-bordered">
                         <tbody>
                         {% for ontology in ontologies %}
-                            {% if ontology.get_index()%5 == 0 and ontology.get_index() > 0 %}
+                            {% if ontology.get_index()%4 == 0 and ontology.get_index() > 0 %}
                             <tr> {% endif%}
                             <td>
                                 <input type="checkbox" class="mr-1" name="{{ dv_setting_el['vocab-name'] }}|{{ ontology.get_name() }}"><a target="_blank" href="{{ ontology.get_base_url() }}">{{ ontology.get_name() }}</a>
+                                <table class="table table-borderless">
+                                    <tbody>
+                                    <tr><td><input type="checkbox" class="mr-1" name="{{ dv_setting_el['vocab-name'] }}|{{ ontology.get_name() }}" checked="checked" disabled>English</td></tr>
+                                    <tr><td><input type="checkbox" class="mr-1" name="{{ dv_setting_el['vocab-name'] }}|{{ ontology.get_name() }}">Frans</td></tr>
+                                    </tbody>
+                                </table>
                             </td>
-                        {% if (ontology.get_index()+1) %5 == 0 %}
+                        {% if (ontology.get_index()+1) %4 == 0 %}
                             </tr> {% endif %}
                         {% endfor %}
                         </tr>

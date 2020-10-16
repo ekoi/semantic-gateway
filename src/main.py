@@ -52,6 +52,7 @@ def download():
 
 @app.get('/dv/setting/edit')
 def get_fields_composer(request: Request):
+    dv_setting_json = []
     print("---------------------------------------")
 
     r = http.request('GET', "https://raw.githubusercontent.com/ekoi/speeltuin/master/resources/CMM_Custom_MetadataBlock.tsv")
@@ -87,9 +88,6 @@ def get_fields_composer(request: Request):
             json_process = ''
 
     vocabularies = Vocabularies(conf_file_path)
-    print("========================start================================")
-    # print(dv_setting_json)
-    print("========================end================================")
 
     return templates.TemplateResponse('dv-cvm-setting-generator.html', context={'request': request, 'dv_setting_json' : dv_setting_json, 'ontologies': vocabularies.get_ontologies()})
 

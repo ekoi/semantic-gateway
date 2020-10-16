@@ -111,6 +111,22 @@ e.parentNode.parentNode.parentNode.remove();
                     <input type="text" class="form-control" name="inputVocabulary_{{ ontology.get_index() }}" value="{{ ontology.get_vocabulary() }}" placeholder="Vocabulary">
                 </div>
             </div>
+                <div class="form-group row">
+                    <label for="inputLang" class="col-sm-3 col-form-label">Language</label>
+                    <div class="col-sm-6">
+                        <table>
+                        {% for lang in ontology.get_Language() %}
+                            <tr><td>
+                        <input type="text" class="form-control" name="inputLang_{{ ontology.get_index() }}" value="{{ lang.attrib['code'] }}" placeholder="Vocabulary">
+                                <td>
+                                    <input type="text" class="form-control" name="inputLang_{{ ontology.get_index() }}" value="{{ lang.text }}" placeholder="Vocabulary">
+                                </td>
+                            </td></tr>
+                        {% endfor %}
+                        </table>
+                    </div>
+
+                </div>
             <div class="form-group row">
                 <label for="inputUrl" class="col-sm-3 col-form-label">Base URL</label>
                 <div class="col-sm-6">

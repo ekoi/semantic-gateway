@@ -29,6 +29,10 @@ class Ontology:
     def get_type(self):
         return self.element.find('type').text
 
+    def get_Language(self):
+        langs = self.element.find('language')
+        return langs
+
     def get_vocabulary(self):
         v = self.element.find('vocabulary')
         if v is not None:
