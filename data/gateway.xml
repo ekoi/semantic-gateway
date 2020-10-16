@@ -6,7 +6,7 @@
         <parameters>
             <vocab>$vocab</vocab>
             <query>$term</query>
-            <lang>CESSDA</lang>
+            <lang>en</lang>
         </parameters>
     </ontology>
     <ontology name="thesaurus">
