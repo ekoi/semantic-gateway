@@ -4,7 +4,7 @@ import json
 
 from fastapi import FastAPI, Request, Response
 from fastapi.templating import Jinja2Templates
-from starlette.responses import FileResponse, RedirectResponse
+from starlette.responses import FileResponse, RedirectResponse, StreamingResponse
 from starlette.staticfiles import StaticFiles
 
 from src.model import Vocabularies, WriteXML
@@ -15,6 +15,7 @@ app.mount('/static', StaticFiles(directory='static'), name='static')
 
 conf_file_path = './data/gateway.xml'
 http = urllib3.PoolManager()
+dv_setting_json = []
 
 @app.get('/')
 def info():
@@ -51,6 +52,8 @@ def download():
 
 @app.get('/dv/setting/edit')
 def get_fields_composer(request: Request):
+    print("---------------------------------------")
+
     r = http.request('GET', "https://raw.githubusercontent.com/ekoi/speeltuin/master/resources/CMM_Custom_MetadataBlock.tsv")
     d = r.data.decode('utf-8')
     s = io.StringIO(d)
@@ -58,7 +61,6 @@ def get_fields_composer(request: Request):
     json_process = ''
     json_element = ''
     json_text = ''
-    dv_setting_json = []
     dv_setting_el = {}
     for line in s:
         abc = line.split('\t')
@@ -75,7 +77,7 @@ def get_fields_composer(request: Request):
                 json_element = json_element.replace('KU', abc[1])
                 json_process="finish";
                 dv_setting_el = json.loads(json_element)
-                print(dv_setting_el)
+                # print(dv_setting_el)
                 dv_setting_json.append(dv_setting_el)
 
             else:
@@ -84,11 +86,36 @@ def get_fields_composer(request: Request):
         if json_process == 'finish':
             json_process = ''
 
-        vocabularies = Vocabularies(conf_file_path)
-        # print(dv_setting_json)
+    vocabularies = Vocabularies(conf_file_path)
+    print("========================start================================")
+    # print(dv_setting_json)
+    print("========================end================================")
+
     return templates.TemplateResponse('dv-cvm-setting-generator.html', context={'request': request, 'dv_setting_json' : dv_setting_json, 'ontologies': vocabularies.get_ontologies()})
 
 @app.post("/dv/setting/edit")
-async def generate_dv_setting_post(request: Request):
+async def push_dv_setting_post(request: Request):
+    print('push')
     form_data = await request.form()
     return form_data
+
+@app.post("/dv/setting/download")
+async def download_dv_setting_post(request: Request):
+    for dv in dv_setting_json:
+        print(dv['vocab-name'])
+
+    form_data = await request.form()
+    form_inputs = form_data.items()
+    for dv in dv_setting_json:
+        dv['vocabs']=[]
+    dv_json=[]
+    for key, value in form_inputs:
+        if key not in ['dv_url','dv_api_token']:
+            for dv in dv_setting_json:
+                if str(key).startswith(dv['vocab-name']):
+                    dv['vocabs'].append(str(key).split('|')[1])
+                    dv_json.append(dv)
+
+    with open('dv-setting.json', 'w') as json_file:
+        json.dump(dv_json, json_file)
+    return FileResponse('dv-setting.json', media_type='application/octet-stream', filename='dv-setting.json')

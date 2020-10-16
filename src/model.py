@@ -68,11 +68,11 @@ class Ontology:
 
 class WriteXML:
     root = ET.Element('vocabularies');
-    def __init__(self, el):
+    def __init__(self, form_inputs):
         #Remove all vocabularies children
         for child in self.root.findall('.//ontology'):
             self.root.remove(child)
-        for key, value in el:
+        for key, value in form_inputs:
             if str(value).strip() != '':
                 if str(key).startswith('inputName_'):
                     ontology = ET.SubElement(self.root, 'ontology')
