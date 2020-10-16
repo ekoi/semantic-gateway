@@ -10,13 +10,16 @@
 </head>
 <body>
 <script>
-
+    $('#akmi').on('submit', function (e) {
+    //your awesome code here
+    alert('I HAPPEN BEFORE FORM VALIDATION');
+})
 </script>
 <div class="container">
     <div class="jumbotron bg-light">
         <h1 class="display-5">Dataverse CVM Setting Generator</h1>
         <hr class="my-4">
-        <form method="post">
+        <form method="post" name="akmi">
         <div class="form-group">
             {% for dv_setting_el in dv_setting_json %}
             <div class="row">
@@ -31,7 +34,7 @@
                             {% if ontology.get_index()%5 == 0 and ontology.get_index() > 0 %}
                             <tr> {% endif%}
                             <td>
-                                <input type="checkbox" class="mr-1" name="{{ dv_setting_el['vocab-name'] }}_{{ ontology.get_name() }}"><a target="_blank" href="{{ ontology.get_base_url() }}">{{ ontology.get_name() }}</a>
+                                <input type="checkbox" class="mr-1" name="{{ dv_setting_el['vocab-name'] }}|{{ ontology.get_name() }}"><a target="_blank" href="{{ ontology.get_base_url() }}">{{ ontology.get_name() }}</a>
                             </td>
                         {% if (ontology.get_index()+1) %5 == 0 %}
                             </tr> {% endif %}
@@ -48,7 +51,7 @@
         </div>
             <div class="form-inline d-flex flex-nowrap">
                 <div class="form-group w-25">
-                        <a class="btn btn-warning" href="" role="button">download</a>
+                    <input  class="btn btn-warning" type="submit" value="download" formnovalidate="formnovalidate" formaction="/dv/setting/download">
                 </div>
                 <div class="md-form form-group">
                     <label for="dv_url">Dataverse URL</label>
