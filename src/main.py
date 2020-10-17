@@ -48,25 +48,28 @@ def download():
     return FileResponse(conf_file_path, media_type='application/octet-stream', filename='gateway-conf.xml')
 
 @app.get('/dv/setting/edit')
-def fields_generator_get(request: Request):
-    readTsvFromUrl = ReadTsvFromUrl(request, http)
-    dv_setting_json = readTsvFromUrl.get_dv_setting_json()
-
+def fields_generator_get(request: Request, tsv_url:str=''):
+    print(tsv_url)
+    dv_setting_json=[]
     vocabularies = Vocabularies(conf_file_path)
+    if str(tsv_url).endswith('.tsv') and (str(tsv_url).startswith('http://') or str(tsv_url).startswith('https://')):
+        readTsvFromUrl = ReadTsvFromUrl(request, http, tsv_url)
+        dv_setting_json = readTsvFromUrl.get_dv_setting_json()
+    else:
+        print('****ERROR***')
 
-    return templates.TemplateResponse('dv-cvm-setting-generator.html', context={'request': request, 'dv_setting_json' : dv_setting_json, 'ontologies': vocabularies.get_ontologies()})
+    return templates.TemplateResponse('dv-cvm-setting-generator.html', context={'request': request, 'dv_setting_json' : dv_setting_json
+                                        , 'ontologies': vocabularies.get_ontologies(), 'tsv_url':tsv_url})
 
 @app.post("/dv/setting/edit")
-async def push_dv_setting_post(request: Request):
-    readTsvFromUrl = ReadTsvFromUrl(request, http)
+async def push_dv_setting_post(request: Request, tsv_url:str=''):
+    readTsvFromUrl = ReadTsvFromUrl(request, http, tsv_url)
     dv_setting_json = readTsvFromUrl.get_dv_setting_json()
     form_data = await request.form()
     createDVSettingJson = CreateDVSettingJson(form_data, dv_setting_json)
     encoded_data = json.dumps(createDVSettingJson.get_dv_json()).encode('utf-8')
     dv_api_url = createDVSettingJson.get_dv_url() + '/api/admin/settings/:CVMConf?unblock-key=' + createDVSettingJson.get_api_token()
-    print(dv_api_url)
-    print(createDVSettingJson.get_api_token())
-    print(createDVSettingJson.get_api_token())
+
     resp = http.request(
         'PUT',
         dv_api_url,
@@ -94,8 +97,8 @@ async def push_dv_setting_post(request: Request):
             return str(resp.status)
 
 @app.post("/dv/setting/download")
-async def download_dv_setting_post(request: Request):
-    readTsvFromUrl = ReadTsvFromUrl(request, http)
+async def download_dv_setting_post(request: Request, tsv_url:str=''):
+    readTsvFromUrl = ReadTsvFromUrl(request, http, tsv_url)
     dv_setting_json = readTsvFromUrl.get_dv_setting_json()
     form_data = await request.form()
     createDVSettingJson = CreateDVSettingJson(form_data, dv_setting_json)

@@ -114,9 +114,10 @@ class WriteXML:
 
 class ReadTsvFromUrl:
     dv_setting_json = []
-    def __init__(self,request, http):
+    def __init__(self,request, http, tsv_url):
         self.dv_setting_json = []
-        r = http.request('GET', "https://raw.githubusercontent.com/ekoi/speeltuin/master/resources/CMM_Custom_MetadataBlock.tsv")
+        #https://raw.githubusercontent.com/ekoi/speeltuin/master/resources/CMM_Custom_MetadataBlock.tsv
+        r = http.request('GET', tsv_url)
         d = r.data.decode('utf-8')
         s = io.StringIO(d)
         template='{"vocab-name":"AKMI_KEY", "cvm-url":"' + str(request.base_url) +'", "language":"LANGUAGE", "vocabs":["VOC"],"vocab-codes": ["KV","KT","KU"]}';
