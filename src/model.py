@@ -124,7 +124,7 @@ class ReadTsvFromUrl:
         if r.status != 200:
             return
 
-        template='{"vocab-name":"AKMI_KEY", "cvm-url":"' + gateway_url +'", "language":"LANGUAGE", "vocabs":["VOC"],"vocab-codes": ["KV","KT","KU"]}';
+        template='{"vocab-name":"AKMI_KEY", "cvm-url":"' + gateway_url +'", "language":"system", "vocabs":["VOC"],"vocab-codes": ["KV","KT","KU"]}';
         json_process = ''
         json_element = ''
         json_text = ''
