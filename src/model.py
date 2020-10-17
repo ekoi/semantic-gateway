@@ -153,6 +153,8 @@ class ReadTsvFromUrl:
 
 class CreateDVSettingJson:
     dv_json = []
+    dv_url : str = ''
+    dv_api_token : str = ''
     def __init__(self, form_data, dv_setting_json):
         form_inputs = form_data.items()
         for dv in dv_setting_json:
@@ -165,6 +167,16 @@ class CreateDVSettingJson:
                         dv['vocabs'].append(str(key).split('|')[1])
                         if not (any(tag['vocab-name'] == dv['vocab-name'] for tag in self.dv_json)):
                             self.dv_json.append(dv)
+            else:
+                if key == 'dv_api_token':
+                    self.dv_api_token = value
+                else:
+                    self.dv_url = value
+    def get_dv_url(self):
+        return self.dv_url
+
+    def get_api_token(self):
+        return self.dv_api_token
 
     def save_dv_json(self):
         with open('dv-setting.json', 'w') as json_file:
@@ -172,4 +184,6 @@ class CreateDVSettingJson:
             json_file.truncate()
             json.dump(self.dv_json, json_file)
             json_file.close()
+
+    def get_dv_json(self):
         return self.dv_json

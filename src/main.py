@@ -1,4 +1,4 @@
-import io, urllib3, json
+import urllib3, json
 
 from fastapi import FastAPI, Request, Response
 from fastapi.templating import Jinja2Templates
@@ -58,9 +58,40 @@ def fields_generator_get(request: Request):
 
 @app.post("/dv/setting/edit")
 async def push_dv_setting_post(request: Request):
-    print('push')
+    readTsvFromUrl = ReadTsvFromUrl(request, http)
+    dv_setting_json = readTsvFromUrl.get_dv_setting_json()
     form_data = await request.form()
-    return form_data
+    createDVSettingJson = CreateDVSettingJson(form_data, dv_setting_json)
+    encoded_data = json.dumps(createDVSettingJson.get_dv_json()).encode('utf-8')
+    dv_api_url = createDVSettingJson.get_dv_url() + '/api/admin/settings/:CVMConf?unblock-key=' + createDVSettingJson.get_api_token()
+    print(dv_api_url)
+    print(createDVSettingJson.get_api_token())
+    print(createDVSettingJson.get_api_token())
+    resp = http.request(
+        'PUT',
+        dv_api_url,
+        body=encoded_data,
+        headers={'Content-Type': 'application/json'})
+    print(resp.status)
+
+    if resp.status == 200:
+        result = json.loads(resp.data.decode('utf-8'))
+        print(result)
+        if result.get('status') == 'OK':
+            return result.get('data')
+        elif result.get('status') == 'error':
+            return result.get('message')
+        else:
+            return 'Other errors: ' + str(result)
+    else:
+        try:
+
+            print(resp.msg)
+            result = json.loads(resp.data.decode('utf-8'))
+            print(result)
+            return result.get('data')
+        except:
+            return str(resp.status)
 
 @app.post("/dv/setting/download")
 async def download_dv_setting_post(request: Request):
@@ -68,5 +99,8 @@ async def download_dv_setting_post(request: Request):
     dv_setting_json = readTsvFromUrl.get_dv_setting_json()
     form_data = await request.form()
     createDVSettingJson = CreateDVSettingJson(form_data, dv_setting_json)
+    x = createDVSettingJson.get_dv_json()
+    if len(x) == 0:
+        return "No selected vocabulary"
     createDVSettingJson.save_dv_json()
     return FileResponse('dv-setting.json', media_type='application/octet-stream', filename='dv-setting.json')
