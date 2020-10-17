@@ -120,6 +120,10 @@ class ReadTsvFromUrl:
         r = http.request('GET', tsv_url)
         d = r.data.decode('utf-8')
         s = io.StringIO(d)
+
+        if r.status != 200:
+            return
+
         template='{"vocab-name":"AKMI_KEY", "cvm-url":"' + str(request.base_url) +'", "language":"LANGUAGE", "vocabs":["VOC"],"vocab-codes": ["KV","KT","KU"]}';
         json_process = ''
         json_element = ''
