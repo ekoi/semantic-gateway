@@ -1,4 +1,5 @@
 import urllib3, json
+import validators
 
 from fastapi import FastAPI, Request, Response
 from fastapi.templating import Jinja2Templates
@@ -49,10 +50,9 @@ def download():
 
 @app.get('/dv/setting/edit')
 def fields_generator_get(request: Request, tsv_url:str=''):
-    print(tsv_url)
     dv_setting_json=[]
     vocabularies = Vocabularies(conf_file_path)
-    if str(tsv_url).endswith('.tsv') and (str(tsv_url).startswith('http://') or str(tsv_url).startswith('https://')):
+    if validators.url(tsv_url) and str(tsv_url).endswith('.tsv'):
         readTsvFromUrl = ReadTsvFromUrl(request, http, tsv_url)
         dv_setting_json = readTsvFromUrl.get_dv_setting_json()
     else:
@@ -63,47 +63,51 @@ def fields_generator_get(request: Request, tsv_url:str=''):
 
 @app.post("/dv/setting/edit")
 async def push_dv_setting_post(request: Request, tsv_url:str=''):
-    readTsvFromUrl = ReadTsvFromUrl(request, http, tsv_url)
-    dv_setting_json = readTsvFromUrl.get_dv_setting_json()
     form_data = await request.form()
-    createDVSettingJson = CreateDVSettingJson(form_data, dv_setting_json)
-    encoded_data = json.dumps(createDVSettingJson.get_dv_json()).encode('utf-8')
-    dv_api_url = createDVSettingJson.get_dv_url() + '/api/admin/settings/:CVMConf?unblock-key=' + createDVSettingJson.get_api_token()
-
-    resp = http.request(
-        'PUT',
-        dv_api_url,
-        body=encoded_data,
-        headers={'Content-Type': 'application/json'})
-    print(resp.status)
-
-    if resp.status == 200:
-        result = json.loads(resp.data.decode('utf-8'))
-        print(result)
-        if result.get('status') == 'OK':
-            return result.get('data')
-        elif result.get('status') == 'error':
-            return result.get('message')
-        else:
-            return 'Other errors: ' + str(result)
+    gateway_url = form_data['gateway_url']
+    if not validators.url(gateway_url):
+        return "Invalid Gateway URL"
     else:
-        try:
+        readTsvFromUrl = ReadTsvFromUrl(request, http, tsv_url, form_data['gateway_url'])
+        dv_setting_json = readTsvFromUrl.get_dv_setting_json()
 
-            print(resp.msg)
+        createDVSettingJson = CreateDVSettingJson(form_data, dv_setting_json)
+        encoded_data = json.dumps(createDVSettingJson.get_dv_json()).encode('utf-8')
+        dv_api_url = createDVSettingJson.get_dv_url() + '/api/admin/settings/:CVMConf?unblock-key=' + createDVSettingJson.get_api_token()
+
+        resp = http.request(
+            'PUT',
+            dv_api_url,
+            body=encoded_data,
+            headers={'Content-Type': 'application/json'})
+
+        if resp.status == 200:
             result = json.loads(resp.data.decode('utf-8'))
-            print(result)
-            return result.get('data')
-        except:
-            return str(resp.status)
+            if result.get('status') == 'OK':
+                return result.get('data')
+            elif result.get('status') == 'error':
+                return result.get('message')
+            else:
+                return 'Other errors: ' + str(result)
+        else:
+            try:
+                result = json.loads(resp.data.decode('utf-8'))
+                return result.get('data')
+            except:
+                return str(resp.status)
 
 @app.post("/dv/setting/download")
 async def download_dv_setting_post(request: Request, tsv_url:str=''):
-    readTsvFromUrl = ReadTsvFromUrl(request, http, tsv_url)
-    dv_setting_json = readTsvFromUrl.get_dv_setting_json()
     form_data = await request.form()
-    createDVSettingJson = CreateDVSettingJson(form_data, dv_setting_json)
-    x = createDVSettingJson.get_dv_json()
-    if len(x) == 0:
-        return "No selected vocabulary"
-    createDVSettingJson.save_dv_json()
-    return FileResponse('dv-setting.json', media_type='application/octet-stream', filename='dv-setting.json')
+    gateway_url = form_data['gateway_url']
+    if not validators.url(gateway_url):
+        return "Invalid Gateway URL"
+    else:
+        readTsvFromUrl = ReadTsvFromUrl(request, http, tsv_url, gateway_url)
+        dv_setting_json = readTsvFromUrl.get_dv_setting_json()
+        createDVSettingJson = CreateDVSettingJson(form_data, dv_setting_json)
+        x = createDVSettingJson.get_dv_json()
+        if len(x) == 0:
+            return "No selected vocabulary"
+        createDVSettingJson.save_dv_json()
+        return FileResponse('dv-setting.json', media_type='application/octet-stream', filename='dv-setting.json')

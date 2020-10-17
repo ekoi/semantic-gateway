@@ -114,7 +114,7 @@ class WriteXML:
 
 class ReadTsvFromUrl:
     dv_setting_json = []
-    def __init__(self,request, http, tsv_url):
+    def __init__(self,request, http, tsv_url, gateway_url:str=''):
         self.dv_setting_json = []
         #https://raw.githubusercontent.com/ekoi/speeltuin/master/resources/CMM_Custom_MetadataBlock.tsv
         r = http.request('GET', tsv_url)
@@ -124,7 +124,7 @@ class ReadTsvFromUrl:
         if r.status != 200:
             return
 
-        template='{"vocab-name":"AKMI_KEY", "cvm-url":"' + str(request.base_url) +'", "language":"LANGUAGE", "vocabs":["VOC"],"vocab-codes": ["KV","KT","KU"]}';
+        template='{"vocab-name":"AKMI_KEY", "cvm-url":"' + gateway_url +'", "language":"LANGUAGE", "vocabs":["VOC"],"vocab-codes": ["KV","KT","KU"]}';
         json_process = ''
         json_element = ''
         json_text = ''

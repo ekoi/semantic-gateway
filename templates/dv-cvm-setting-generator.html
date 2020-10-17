@@ -23,7 +23,7 @@
 });
 </script>
     <div class="container">
-        <div class="jumbotron bg-light">
+        <tr class="jumbotron bg-light">
             <h1 class="display-5">Dataverse CVM Setting Generator</h1>
             <hr class="my-4">
             <form method="GET">
@@ -38,7 +38,7 @@
 <!--            <button type="button" id="formButton">Toggle Form!</button>-->
             <hr class="my-4">
             <form id="akmi" method="post" name="akmi">
-            <div class="form-group">
+            <td class="form-group">
                 {% for dv_setting_el in dv_setting_json %}
                 <div class="row">
                     <div class="col-sm-2">
@@ -59,7 +59,6 @@
                                 </tr> {% endif %}
                             {% endfor %}
                             </tr>
-
                             </tbody>
                         </table>
 
@@ -67,18 +66,23 @@
                 </div>
                 <hr class="my-4">
                 {% if loop.last %}
-                <div class="form-inline d-flex flex-nowrap">
-                    <div class="form-group w-25">
-                        <input  class="btn btn-warning" type="submit" value="download" formnovalidate="formnovalidate" formaction="/dv/setting/download?tsv_url={{ tsv_url }}">
-                    </div>
-                    <div class="md-form form-group">
-                        <label for="dv_url">Dataverse URL</label>
-                        <input type="text" class="form-control" name="dv_url" value="" placeholder="Dataverse URL" required>
-                        <label class="mr-2 ml-4" for="dv_api_token">unblock-key</label>
-                        <input type="text" class="form-control" name="dv_api_token" value="" placeholder="unblock-key" required>
-                        <button type="submit" class="btn btn-primary">push</button>
-                    </div>
-                </div>
+                <table class="table table-borderless">
+                    <tr><td></td>
+                <td class="text-right">
+                    <label class="mr-2 ml-4 pt-1" for="gateway_url">Gateway URL</label>
+                </td>
+                    <td colspan="3">
+                        <input type="text" class="form-control pt-0"  name="gateway_url" value="" placeholder="Gateway URL" required>
+                    </td>
+                </tr>
+                <tr><td><input  class="btn btn-warning" type="submit" value="download" formnovalidate="formnovalidate" formaction="/dv/setting/download?tsv_url={{ tsv_url }}"></td>
+                 <td class="text-right"><label class="mr-2 ml-4 pt-1" for="dv_url">Dataverse URL</label></td>
+                    <td><input type="text" class="form-control pt-0" name="dv_url" value="" placeholder="Dataverse URL" required></td>
+                       <td class="text-right"><label class="mr-2 ml-4 pt-1" for="dv_api_token">unblock-key</label></td>
+                    <td><input type="text" class="form-control pt-0" name="dv_api_token" value="" placeholder="unblock-key" required></td>
+                    <td><button type="submit" class="btn btn-primary">push</button></td>
+
+                </tr>
                 {% endif %}
                 {% endfor %}
             </div>
