@@ -13,17 +13,8 @@
     </style>
 </head>
 <body>
-<script>
-    $(document).ready(function() {
-  $("#formButton").click(function() {
-    console.log('hello');
-    $("#akmi").toggle();
-    console.log('eko');
-  });
-});
-</script>
     <div class="container">
-        <tr class="jumbotron bg-light">
+        <div class="jumbotron bg-light">
             <h1 class="display-5">Dataverse CVM Setting Generator</h1>
             <hr class="my-4">
             <form method="GET">
@@ -32,10 +23,8 @@
                     <label for="name">Name</label>
                     <input type="text" class="form-control" name="tsv_url" placeholder="URL TSV">
                 </div>
-                <button type="submit" class="btn btn-success">Submit <span class="fa fa-arrow-right"></span></button>
-                <div id="hello"></div>
+                <button type="submit" class="btn btn-primary">Submit <span class="fa fa-arrow-right"></span></button>
             </form>
-<!--            <button type="button" id="formButton">Toggle Form!</button>-->
             <hr class="my-4">
             <form id="akmi" method="post" name="akmi">
             <td class="form-group">
@@ -61,7 +50,6 @@
                             </tr>
                             </tbody>
                         </table>
-
                     </div>
                 </div>
                 <hr class="my-4">
@@ -83,9 +71,9 @@
                     <td><button type="submit" class="btn btn-primary">push</button></td>
 
                 </tr>
+                </table>
                 {% endif %}
                 {% endfor %}
-            </div>
             </form>
         </div>
     </div>
