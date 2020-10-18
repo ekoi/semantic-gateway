@@ -156,6 +156,43 @@ class ReadTsvFromUrl:
     def get_dv_setting_json(self):
         return self.dv_setting_json
 
+class ReadTsvFromLocalFile:
+    dv_setting_json = []
+    def __init__(self, content, gateway_url:str=''):
+
+        self.dv_setting_json = []
+        template='{"vocab-name":"AKMI_KEY", "cvm-url":"' + gateway_url +'", "language":"system", "vocabs":["VOC"],"vocab-codes": ["KV","KT","KU"]}';
+        json_process = ''
+        json_element = ''
+        json_text = ''
+        dv_setting_el = {}
+        for line in content:
+            abc = line.split('\t')
+            if json_process == '' and abc[1].endswith('-cv'):
+                json_element = template.replace('AKMI_KEY',abc[1])
+                json_element = json_element.replace('VOC', abc[2])
+                json_process='create'
+            elif json_process  == 'create':
+                if abc[1].endswith('-vocabulary'):
+                    json_element = json_element.replace('KV', abc[1])
+                elif abc[1].endswith('-term'):
+                    json_element = json_element.replace('KT', abc[1])
+                elif abc[1].endswith('-url'):
+                    json_element = json_element.replace('KU', abc[1])
+                    json_process="finish";
+                    dv_setting_el = json.loads(json_element)
+                    # print(dv_setting_el)
+                    self.dv_setting_json.append(dv_setting_el)
+
+                else:
+                    print('error')
+
+            if json_process == 'finish':
+                json_process = ''
+
+    def get_dv_setting_json(self):
+        return self.dv_setting_json
+
 class CreateDVSettingJson:
     dv_json = []
     dv_url : str = ''
